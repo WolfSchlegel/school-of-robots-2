@@ -30,7 +30,7 @@ set(${PROJECT_NAME}_SKETCH blink4arduino.ino)
 
 #### Additional settings for programmer. From programmers.txt
 # set(${PROJECT_NAME}_PROGRAMMER avrispmkii)
-set(${PROJECT_NAME}_PORT /dev/cu.usbmodem14401)
+set(${PROJECT_NAME}_PORT /dev/cu.usbmodem14201)
 # set(uno.upload.speed 9600)
 
 ## Verbose build process
