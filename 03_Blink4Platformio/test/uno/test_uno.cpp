@@ -1,13 +1,7 @@
+// This example test is based on https://github.com/platformio/platformio-docs/blob/develop/tutorials/core/unit_testing_blink.rst
+
 #include <Arduino.h>
 #include <unity.h>
-
-// void setUp(void) {
-// // set stuff up here
-// }
-
-// void tearDown(void) {
-// // clean stuff up here
-// }
 
 void test_led_builtin_pin_number(void) {
     TEST_ASSERT_EQUAL(13, LED_BUILTIN);
@@ -28,7 +22,7 @@ void setup() {
     // if board doesn't support software reset via Serial.DTR/RTS
     delay(2000);
 
-    UNITY_BEGIN();    // IMPORTANT LINE!
+    UnityBegin("test/uno/test_uno.cpp");    // IMPORTANT LINE!
     RUN_TEST(test_led_builtin_pin_number);
 
     pinMode(LED_BUILTIN, OUTPUT);
@@ -41,12 +35,12 @@ void loop() {
     if (i < max_blinks)
     {
         RUN_TEST(test_led_state_high);
-        delay(500);
+        delay(505);
         RUN_TEST(test_led_state_low);
         delay(500);
         i++;
     }
     else if (i == max_blinks) {
-        UNITY_END(); // stop unit testing
+        UnityEnd(); // stop unit testing
     }
 }
