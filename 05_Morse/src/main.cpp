@@ -1,5 +1,5 @@
 #include "Arduino.h"
-#include "alphabet.h"
+#include "../lib/morse/src/alphabet.h"
 
 Alphabet alphabet(13);
 
