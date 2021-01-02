@@ -1,6 +1,13 @@
 # Sending Morse signals with CLion and the PlatformIO plugin
 
-TBD
+This project implements a (reduced) Morse alphabet and provides examples for the following aspects:
+* Organise shared code in a library and use that library
+* Use the library in the actual embedded application as well as in unit tests
+* Distinguish between native and embedded unit tests
+* Hand-rolled mocking and dependency injection
+  * Use the same Alphabet class throughout and inject different implementations of the Morse interface
+  * Use the real Morse implementation for the embedded application
+  * Use the mock implementation of the Morse class for native testing
 
 ## Prerequisites
 * PlatformIO Core (CLI) which is available [here](https://docs.platformio.org/en/latest/core/index.html)
@@ -29,7 +36,7 @@ pio test
 # run native unit tests
 pio test -e native
 
-# run unit tests on Arduino Uno
+# run embedded unit tests
 pio test -e uno
 
 # upload firmware to the Arduino board
