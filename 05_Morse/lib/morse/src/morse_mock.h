@@ -1,4 +1,4 @@
-#include "../../lib/morse/src/morse.h"
+#include "morse.h"
 
 class MorseMock : public Morse {
 public:

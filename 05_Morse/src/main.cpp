@@ -1,5 +1,5 @@
 #include "Arduino.h"
-#include "../lib/morse/src/alphabet.h"
+#include "alphabet.h"
 #include "morse_impl.h"
 
 MorseImpl morse;

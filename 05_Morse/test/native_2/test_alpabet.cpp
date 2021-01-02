@@ -1,16 +1,19 @@
-#include <iostream>
 #include <unity.h>
 
 #include "../../lib/morse/src/alphabet.h"
-#include "morse_mock.h"
+#include "../../lib/morse/src/morse_mock.h"
 
 MorseMock morseMock;
 Alphabet alphabet(&morseMock);
 
 void test_o(void) {
+    // given
     morseMock.resetCounters();
+
+    // when
     alphabet.o();
 
+    // then
     TEST_ASSERT_EQUAL(3, morseMock.getDashCounter());
     TEST_ASSERT_EQUAL(0, morseMock.getDotCounter());
     TEST_ASSERT_EQUAL(1, morseMock.getPauseAfterLetterCounter());
@@ -18,9 +21,13 @@ void test_o(void) {
 }
 
 void test_s(void) {
+    // given
     morseMock.resetCounters();
+
+    // when
     alphabet.s();
 
+    // then
     TEST_ASSERT_EQUAL(0, morseMock.getDashCounter());
     TEST_ASSERT_EQUAL(3, morseMock.getDotCounter());
     TEST_ASSERT_EQUAL(1, morseMock.getPauseAfterLetterCounter());
@@ -28,13 +35,16 @@ void test_s(void) {
 }
 
 void test_sos(void) {
+    // given
     morseMock.resetCounters();
 
+    // when
     alphabet.s();
     alphabet.o();
     alphabet.s();
     alphabet.pause();
 
+    // then
     TEST_ASSERT_EQUAL(3, morseMock.getDashCounter());
     TEST_ASSERT_EQUAL(6, morseMock.getDotCounter());
     TEST_ASSERT_EQUAL(3, morseMock.getPauseAfterLetterCounter());

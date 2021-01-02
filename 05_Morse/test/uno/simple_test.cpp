@@ -1,12 +1,6 @@
 #include <Arduino.h>
 #include <unity.h>
 
-#include "../../lib/morse/src/morse_impl.h"
-#include "../native/morse_mock.h"
-
-MorseImpl morseImpl;
-MorseMock morseMock;
-
 void test_led_builtin_pin_number(void) {
     TEST_ASSERT_EQUAL(13, LED_BUILTIN);
 }
