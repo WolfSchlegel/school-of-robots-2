@@ -16,32 +16,28 @@ public:
     void pauseAfterLetter();
 
     void pauseAfterWord();
-
-private:
-    static const int PERIOD = 250;
-
 };
 
 void MorseImpl::dot() {
-    digitalWrite(PIN, HIGH);
-    delay(PERIOD);
-    digitalWrite(PIN, LOW);
-    delay(PERIOD);
+    digitalWrite(getPin(), HIGH);
+    delay(Morse::PERIOD);
+    digitalWrite(getPin(), LOW);
+    delay(Morse::PERIOD);
 }
 
 void MorseImpl::dash() {
-    digitalWrite(PIN, HIGH);
-    delay(PERIOD * 3);
-    digitalWrite(PIN, LOW);
-    delay(PERIOD);
+    digitalWrite(getPin(), HIGH);
+    delay(Morse::PERIOD * 3);
+    digitalWrite(getPin(), LOW);
+    delay(Morse::PERIOD);
 }
 
 void MorseImpl::pauseAfterLetter() {
-    digitalWrite(PIN, LOW);
-    delay(PERIOD * 2);
+    digitalWrite(getPin(), LOW);
+    delay(Morse::PERIOD * 2);
 }
 
 void MorseImpl::pauseAfterWord() {
-    digitalWrite(PIN, LOW);
-    delay(PERIOD * 4);
+    digitalWrite(getPin(), LOW);
+    delay(Morse::PERIOD * 4);
 }

@@ -16,10 +16,17 @@ public:
 
     virtual void pauseAfterWord();
 
-    static const int PIN = 13;
+    int getPin() const {
+        return pin;
+    }
 
+    void setPin(int pin) {
+        Morse::pin = pin;
+    }
     static const int PERIOD = 250;
 
+protected:
+    int pin;
 };
 
 #endif

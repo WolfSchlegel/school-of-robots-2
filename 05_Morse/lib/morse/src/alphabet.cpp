@@ -5,6 +5,7 @@
 #include "alphabet.h"
 
 Alphabet::Alphabet(Morse *morse)  : _morse{ morse } {
+    morse->setPin(13);
 }
 
 void Alphabet::o() {

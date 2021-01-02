@@ -3,8 +3,7 @@
 #include "../lib/morse/src/morse_impl.h"
 
 MorseImpl morseImpl;
-Morse morse;
-Alphabet alphabet(&morse);
+Alphabet alphabet(&morseImpl);
 
 void setup() {
     Serial.begin(9600); // set up Serial library at 9600 bps
