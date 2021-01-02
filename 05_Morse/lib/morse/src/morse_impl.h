@@ -9,13 +9,13 @@
 
 class MorseImpl : public Morse {
 public:
-    void dot();
+    void dot() override;
 
-    void dash();
+    void dash() override;
 
-    void pauseAfterLetter();
+    void pauseAfterLetter() override;
 
-    void pauseAfterWord();
+    void pauseAfterWord() override;
 };
 
 void MorseImpl::dot() {

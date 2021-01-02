@@ -8,25 +8,31 @@
 
 class Morse {
 public:
-    virtual void dot();
+    virtual void dot() = 0;
 
-    virtual void dash();
+    virtual void dash() = 0;
 
-    virtual void pauseAfterLetter();
+    virtual void pauseAfterLetter() = 0;
 
-    virtual void pauseAfterWord();
+    virtual void pauseAfterWord() = 0;
 
-    int getPin() const {
-        return pin;
-    }
+    int getPin() const;
 
-    void setPin(int pin) {
-        Morse::pin = pin;
-    }
+    void setPin(int pin);
+
     static const int PERIOD = 250;
 
 protected:
     int pin;
 };
 
+int Morse::getPin() const {
+    return pin;
+}
+
+void Morse::setPin(int pin) {
+    Morse::pin = pin;
+}
+
 #endif
+

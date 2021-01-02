@@ -2,36 +2,10 @@
 #include <unity.h>
 
 #include "../../lib/morse/src/morse_impl.h"
-#include "../../lib/morse/src/morse_mock.h"
+#include "../native/morse_mock.h"
 
 MorseImpl morseImpl;
 MorseMock morseMock;
-
-void test_dash() {
-    morseImpl.dash();
-    digitalWrite(LED_BUILTIN, LOW);
-
-    morseMock.dash();
-    TEST_ASSERT_EQUAL(1, morseMock.getDashCounter());
-    morseMock.resetCounters();
-}
-
-void test_dot() {
-    morseImpl.dot();
-    digitalWrite(LED_BUILTIN, LOW);
-
-    // given
-    morseMock.resetCounters();
-    TEST_ASSERT_EQUAL(0, morseMock.getDotCounter());
-
-    // when
-    morseMock.dot();
-    morseMock.dot();
-
-    // then
-    TEST_ASSERT_EQUAL(2, morseMock.getDotCounter());
-    morseMock.resetCounters();
-}
 
 void test_led_builtin_pin_number(void) {
     TEST_ASSERT_EQUAL(13, LED_BUILTIN);
@@ -67,10 +41,6 @@ uint8_t max_blinks = 5;
 void loop() {
     if (i < max_blinks)
     {
-        RUN_TEST(test_dash);
-        delay(500);
-        RUN_TEST(test_dot);
-        delay(500);
         RUN_TEST(test_led_state_high);
         delay(500);
         RUN_TEST(test_led_state_low);
