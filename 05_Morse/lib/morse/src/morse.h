@@ -7,15 +7,19 @@
 #define Morse_h
 
 class Morse {
-  public:
-    Morse(int pin);
+public:
     virtual void dot();
+
     virtual void dash();
+
     virtual void pauseAfterLetter();
+
     virtual void pauseAfterWord();
-  private:
-    int _pin;
+
+    static const int PIN = 13;
+
     static const int PERIOD = 250;
+
 };
 
 #endif

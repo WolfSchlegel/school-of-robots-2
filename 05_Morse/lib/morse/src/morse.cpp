@@ -7,31 +7,26 @@
 #include "morse.h"
 #include "Arduino.h"
 
-Morse::Morse(int pin) {
-  pinMode(pin, OUTPUT);
-  _pin = pin;
-}
-
 void Morse::dot() {
-  digitalWrite(_pin, HIGH);
+  digitalWrite(13, HIGH);
   delay(Morse::PERIOD);
-  digitalWrite(_pin, LOW);
+  digitalWrite(13, LOW);
   delay(Morse::PERIOD);
 }
 
 void Morse::dash() {
-  digitalWrite(_pin, HIGH);
+  digitalWrite(13, HIGH);
   delay(Morse::PERIOD * 3);
-  digitalWrite(_pin, LOW);
+  digitalWrite(13, LOW);
   delay(Morse::PERIOD);
 }
 
 void Morse::pauseAfterLetter() {
-    digitalWrite(_pin, LOW);
+    digitalWrite(13, LOW);
     delay(Morse::PERIOD * 2);
 }
 
 void Morse::pauseAfterWord() {
-    digitalWrite(_pin, LOW);
+    digitalWrite(13, LOW);
     delay(Morse::PERIOD * 4);
 }

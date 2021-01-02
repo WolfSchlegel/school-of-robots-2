@@ -9,12 +9,12 @@
 
 class Alphabet {
   public:
-    Alphabet(int pin);
+    Alphabet(Morse *morse);
     void o();
     void s();
     void pause();
   private:
-    Morse _morse;
+    Morse *_morse;
 };
 
 

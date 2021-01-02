@@ -4,18 +4,19 @@
 
 #include "alphabet.h"
 
-Alphabet::Alphabet(int pin) : _morse(pin) {}
+Alphabet::Alphabet(Morse *morse)  : _morse{ morse } {
+}
 
 void Alphabet::o() {
-    _morse.dot(); _morse.dot(); _morse.dot();
-    _morse.pauseAfterLetter();
+    _morse->dot(); _morse->dot(); _morse->dot();
+    _morse->pauseAfterLetter();
 }
 
 void Alphabet::s() {
-    _morse.dash(); _morse.dash(); _morse.dash();
-    _morse.pauseAfterLetter();
+    _morse->dash(); _morse->dash(); _morse->dash();
+    _morse->pauseAfterLetter();
 }
 
 void Alphabet::pause() {
-    _morse.pauseAfterWord();
+    _morse->pauseAfterWord();
 }
