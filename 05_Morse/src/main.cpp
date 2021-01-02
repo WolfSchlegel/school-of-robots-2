@@ -1,9 +1,9 @@
 #include "Arduino.h"
 #include "../lib/morse/src/alphabet.h"
-#include "../lib/morse/src/morse_impl.h"
+#include "morse_impl.h"
 
-MorseImpl morseImpl;
-Alphabet alphabet(&morseImpl);
+MorseImpl morse;
+Alphabet alphabet(&morse);
 
 void setup() {
     Serial.begin(9600); // set up Serial library at 9600 bps

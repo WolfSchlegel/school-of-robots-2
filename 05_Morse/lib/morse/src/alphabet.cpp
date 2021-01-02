@@ -9,12 +9,12 @@ Alphabet::Alphabet(Morse *morse)  : _morse{ morse } {
 }
 
 void Alphabet::o() {
-    _morse->dot(); _morse->dot(); _morse->dot();
+    _morse->dash(); _morse->dash(); _morse->dash();
     _morse->pauseAfterLetter();
 }
 
 void Alphabet::s() {
-    _morse->dash(); _morse->dash(); _morse->dash();
+    _morse->dot(); _morse->dot(); _morse->dot();
     _morse->pauseAfterLetter();
 }
 
