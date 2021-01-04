@@ -3,8 +3,9 @@
   Created by David A. Mellis, November 2, 2007.
   Released into the public domain.
 */
-#ifndef Morse_h
-#define Morse_h
+
+#ifndef INC_05_MORSE_MORSE_H
+#define INC_05_MORSE_MORSE_H
 
 class Morse {
 public:
@@ -34,5 +35,5 @@ void Morse::setPin(int pin) {
     Morse::pin = pin;
 }
 
-#endif
+#endif  //INC_05_MORSE_MORSE_H
 

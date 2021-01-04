@@ -1,3 +1,6 @@
+#ifndef INC_05_MORSE_MORSE_MOCK_H
+#define INC_05_MORSE_MORSE_MOCK_H
+
 #include "morse.h"
 
 class MorseMock : public Morse {
@@ -51,3 +54,5 @@ protected:
     int pauseAfterWordCounter;
 
 };
+
+#endif //INC_05_MORSE_MORSE_MOCK_H

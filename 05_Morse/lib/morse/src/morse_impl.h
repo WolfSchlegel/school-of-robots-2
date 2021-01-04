@@ -4,6 +4,9 @@
   Released into the public domain.
 */
 
+#ifndef INC_05_MORSE_MORSE_IMPL_H
+#define INC_05_MORSE_MORSE_IMPL_H
+
 #include "morse.h"
 #include "Arduino.h"
 
@@ -41,3 +44,5 @@ void MorseImpl::pauseAfterWord() {
     digitalWrite(getPin(), LOW);
     delay(Morse::PERIOD * 4);
 }
+
+#endif //INC_05_MORSE_MORSE_IMPL_H
