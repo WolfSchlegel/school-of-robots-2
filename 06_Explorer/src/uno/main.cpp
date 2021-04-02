@@ -1,9 +1,9 @@
 // TODO use another string type and remove include
 #include <Arduino.h>
 
-#include "../lib/explorer/src/direction.h"
-#include "../lib/explorer/src/pilot.h"
-#include "../lib/explorer/src/robot_impl.h"
+#include "direction.h"
+#include "pilot.h"
+#include "robot_impl.h"
 
 const int VERSION = 42;
 Pilot pilot;
