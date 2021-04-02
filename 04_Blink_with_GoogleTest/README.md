@@ -27,10 +27,10 @@ pio init
 pio run -t clean
 
 # run all unit tests
-pio test
+pio -c ./platformio.ini test
 
 # run native unit tests
-pio test -e native
+pio -c ./platformio.ini test -e native
 
 # run unit tests on Arduino Uno
 pio test -e uno 

@@ -50,6 +50,11 @@ if (CMAKE_BUILD_TYPE MATCHES "native")
 
     include_directories("${CMAKE_CURRENT_LIST_DIR}/include")
     include_directories("${CMAKE_CURRENT_LIST_DIR}/src")
+    include_directories("${CMAKE_CURRENT_LIST_DIR}/.pio/libdeps/native/googletest")
+    include_directories("${CMAKE_CURRENT_LIST_DIR}/.pio/libdeps/native/googletest/googlemock/include")
+    include_directories("${CMAKE_CURRENT_LIST_DIR}/.pio/libdeps/native/googletest/googlemock")
+    include_directories("${CMAKE_CURRENT_LIST_DIR}/.pio/libdeps/native/googletest/googletest/include")
+    include_directories("${CMAKE_CURRENT_LIST_DIR}/.pio/libdeps/native/googletest/googletest")
     include_directories("$ENV{HOME}/.platformio/packages/tool-unity")
 
     FILE(GLOB_RECURSE EXTRA_LIB_SOURCES
