@@ -17,23 +17,19 @@ public:
 
     virtual void pauseAfterWord() = 0;
 
-    int getPin() const;
+    int getPin() const {
+        return _pin;
+    }
 
-    void setPin(int pin);
+    void setPin(int pin) {
+        _pin = pin;
+    }
 
     static const int PERIOD = 250;
 
 protected:
-    int pin;
+    int _pin;
 };
-
-int Morse::getPin() const {
-    return pin;
-}
-
-void Morse::setPin(int pin) {
-    Morse::pin = pin;
-}
 
 #endif  //INC_05_MORSE_MORSE_H
 
