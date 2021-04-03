@@ -4,45 +4,29 @@
   Released into the public domain.
 */
 
-#ifndef INC_05_MORSE_MORSE_IMPL_H
-#define INC_05_MORSE_MORSE_IMPL_H
-
-#include "morse.h"
+#include "morse_arduino.h"
 #include "Arduino.h"
 
-class MorseImpl : public Morse {
-public:
-    void dot() override;
-
-    void dash() override;
-
-    void pauseAfterLetter() override;
-
-    void pauseAfterWord() override;
-};
-
-void MorseImpl::dot() {
+void MorseArduino::dot() {
     digitalWrite(getPin(), HIGH);
     delay(Morse::PERIOD);
     digitalWrite(getPin(), LOW);
     delay(Morse::PERIOD);
 }
 
-void MorseImpl::dash() {
+void MorseArduino::dash() {
     digitalWrite(getPin(), HIGH);
     delay(Morse::PERIOD * 3);
     digitalWrite(getPin(), LOW);
     delay(Morse::PERIOD);
 }
 
-void MorseImpl::pauseAfterLetter() {
+void MorseArduino::pauseAfterLetter() {
     digitalWrite(getPin(), LOW);
     delay(Morse::PERIOD * 2);
 }
 
-void MorseImpl::pauseAfterWord() {
+void MorseArduino::pauseAfterWord() {
     digitalWrite(getPin(), LOW);
     delay(Morse::PERIOD * 4);
 }
-
-#endif //INC_05_MORSE_MORSE_IMPL_H

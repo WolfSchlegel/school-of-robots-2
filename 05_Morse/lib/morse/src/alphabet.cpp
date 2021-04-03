@@ -1,4 +1,4 @@
-#include "../lib/morse/src/alphabet.h"
+#include "alphabet.h"
 
 Alphabet::Alphabet(Morse *morse)  : _morse(morse) {
     morse->setPin(13);

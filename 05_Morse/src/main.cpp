@@ -1,8 +1,8 @@
 #include "Arduino.h"
 #include "alphabet.h"
-#include "morse_impl.h"
+#include "morse_arduino.h"
 
-MorseImpl morse;
+MorseArduino morse;
 Alphabet alphabet(&morse);
 
 void setup() {
