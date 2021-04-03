@@ -1,7 +1,7 @@
 #include <unity.h>
 
 #include "../../lib/morse/src/alphabet.h"
-#include "../../lib/morse/src/morse_mock.h"
+#include "../native_1/morse_mock.h"
 
 MorseMock morseMock;
 Alphabet alphabet(&morseMock);

@@ -1,7 +1,7 @@
 #ifndef INC_05_MORSE_MORSE_MOCK_H
 #define INC_05_MORSE_MORSE_MOCK_H
 
-#include "morse.h"
+#include "../../lib/morse/src/morse.h"
 
 class MorseMock : public Morse {
 public:

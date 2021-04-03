@@ -1,6 +1,6 @@
 #include <unity.h>
 
-#include "../../lib/morse/src/morse_mock.h"
+#include "morse_mock.h"
 
 MorseMock morseMock;
 
