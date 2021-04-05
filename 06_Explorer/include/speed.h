@@ -1,5 +1,5 @@
-#ifndef INC_06_EXPLORER_SPEED_H
-#define INC_06_EXPLORER_SPEED_H
+#ifndef INC_06_INCLUDE_SPEED_H
+#define INC_06_INCLUDE_SPEED_H
 
 class Speed {
 public:
@@ -11,4 +11,4 @@ public:
     static const int DELAY = 100;
 };
 
-#endif //INC_06_EXPLORER_SPEED_H
+#endif //INC_06_INCLUDE_SPEED_H

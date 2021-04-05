@@ -2,9 +2,11 @@
 #define INC_06_EXPLORER_ROBOT_IMPL_H
 
 #include <Arduino.h>
-#include <Wire.h>
+#include <ArduinoLog.h>
 #include <Adafruit_MotorShield.h>
+#include <Wire.h>
 #include "utility/Adafruit_MS_PWMServoDriver.h"
+
 #include "direction.h"
 #include "robot.h"
 #include "speed.h"
@@ -13,22 +15,24 @@ class RobotImpl : public Robot {
 public:
     RobotImpl() {
         AFMS = Adafruit_MotorShield();
-        leftMotor = AFMS.getMotor(1);
-        rightMotor = AFMS.getMotor(2);
+        leftMotor = AFMS.getMotor(1 );
+        rightMotor = AFMS.getMotor(2 );
     }
 
-    int my_analogRead(int) override;
-    void my_delay(int) override;
-
-    void my_println(String) override;
     void my_setup() override;
 
     void accelerate() override;
     void decelerate() override;
+
     void moveForwards(int) override;
     void moveBackwards(int) override;
+
+    int readLeftTrackSensor() override;
+    int readRightTrackSensor() override;
+
     void rotateClockwise(int) override;
     void rotateCounterClockwise(int) override;
+
     void stop(int) override;
     void stop() override;
 
@@ -36,41 +40,32 @@ private:
     Adafruit_MotorShield AFMS;
     Adafruit_DCMotor *leftMotor;
     Adafruit_DCMotor *rightMotor;
+
+    static const int LEFT_TRACK_SENSOR = 0;   // Yellow cable
+    static const int RIGHT_TRACK_SENSOR = 1;  // Blue cable
 };
 
-int RobotImpl::my_analogRead(int input) {
-    return analogRead(input);
-}
-
-void RobotImpl::my_delay(int value) {
-    delay(value);
-}
-
-void RobotImpl::my_println(String value) {
-    Serial.println(value);
-}
-
 void RobotImpl::my_setup() {
-    Serial.begin(9600);
+    Serial.begin(9600 );
+    Log.begin( LOG_LEVEL_NOTICE, &Serial );
 
-    Serial.println("initialising Adafruit Motorshield v2");
+    Log.notice("initialising Adafruit Motorshield v2" CR );
     AFMS.begin();  // create with the default frequency 1.6KHz
 
     rightMotor->run(FORWARD);
     leftMotor->run(FORWARD);
-
     digitalWrite(LED_BUILTIN, HIGH);
-    Serial.println("finished setup");
+    Log.notice("finished setup" CR);
 }
 
 // experimental
 void RobotImpl::accelerate() {
-    Serial.println("accelerating...");
+    Log.notice("accelerating..." CR);
 
     rightMotor->run(FORWARD);
     leftMotor->run(FORWARD);
-    for (int i = Speed::MIN; i <= Speed::MAX; i += Speed::DELTA){
-        Serial.println("setting speed to " + String(i));
+    for ( int i = Speed::MIN; i <= Speed::MAX; i += Speed::DELTA ){
+        Log.notice("setting speed to %d" CR, i );
 
         rightMotor->setSpeed(i);
         leftMotor->setSpeed(i);
@@ -80,13 +75,13 @@ void RobotImpl::accelerate() {
 
 // still experimental
 void RobotImpl::decelerate() {
-    Serial.println("decelerating...");
+    Log.notice("decelerating..." CR);
 
     rightMotor->run(FORWARD);
     leftMotor->run(FORWARD);
 
-    for (int i = Speed::MIN; i >= Speed::MAX; i -= Speed::DELTA){
-        Serial.println("setting speed to " + String(i));
+    for ( int i = Speed::MIN; i >= Speed::MAX; i -= Speed::DELTA ){
+        Log.notice("setting speed to %d" CR, i );
 
         rightMotor->setSpeed(i);
         leftMotor->setSpeed(i);
@@ -95,7 +90,7 @@ void RobotImpl::decelerate() {
 }
 
 void RobotImpl::moveForwards(int speed) {
-    Serial.println("moving forwards...");
+    Log.notice("moving forwards at speed %d" CR, speed );
     rightMotor->run(FORWARD);
     leftMotor->run(FORWARD);
     rightMotor->setSpeed(speed);
@@ -103,15 +98,27 @@ void RobotImpl::moveForwards(int speed) {
 }
 
 void RobotImpl::moveBackwards(int speed) {
-    Serial.println("moving backwards...");
+    Log.notice("moving backwards at speed %d" CR, speed );
     rightMotor->run(BACKWARD);
     leftMotor->run(BACKWARD);
     rightMotor->setSpeed(speed);
     leftMotor->setSpeed(speed);
 }
 
+int RobotImpl::readLeftTrackSensor() {
+    int result = analogRead(LEFT_TRACK_SENSOR);
+    Log.notice("left track sensor value is %d" CR, result );
+    return result;
+}
+
+int RobotImpl::readRightTrackSensor() {
+    int result = analogRead(RIGHT_TRACK_SENSOR);
+    Log.notice("right track sensor value is %d" CR, result );
+    return result;
+}
+
 void RobotImpl::rotateClockwise(int speed) {
-    Serial.println("moving counterclockwise...");
+    Log.notice("moving counterclockwise at speed %d" CR, speed );
     rightMotor->run(BACKWARD);
     leftMotor->run(FORWARD);
     rightMotor->setSpeed(speed);
@@ -119,7 +126,7 @@ void RobotImpl::rotateClockwise(int speed) {
 }
 
 void RobotImpl::rotateCounterClockwise(int speed) {
-    Serial.println("moving counterclockwise...");
+    Log.notice("moving counterclockwise at speed %d" CR, speed );
     rightMotor->run(FORWARD);
     leftMotor->run(BACKWARD);
     rightMotor->setSpeed(speed);
@@ -127,7 +134,7 @@ void RobotImpl::rotateCounterClockwise(int speed) {
 }
 
 void RobotImpl::stop(int speed) {
-    Serial.println("stopping...");
+    Log.notice("stopping and setting speed to %d" CR, speed );
     rightMotor->setSpeed(speed);
     leftMotor->setSpeed(speed);
 }

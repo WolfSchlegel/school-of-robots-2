@@ -2,8 +2,8 @@
 // Created by Wolf on 07.01.21.
 //
 
-#ifndef INC_06_EXPLORER_DIRECTION_H
-#define INC_06_EXPLORER_DIRECTION_H
+#ifndef INC_06_INCLUDE_DIRECTION_H
+#define INC_06_INCLUDE_DIRECTION_H
 
 enum class Direction {
     BACKWARDS,
@@ -13,4 +13,4 @@ enum class Direction {
     UNDEFINED
 };
 
-#endif //INC_06_EXPLORER_DIRECTION_H
+#endif //INC_06_INCLUDE_DIRECTION_H

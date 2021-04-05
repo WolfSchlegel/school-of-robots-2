@@ -1,5 +1,6 @@
 // TODO use another string type and remove include
 #include <Arduino.h>
+#include <ArduinoLog.h>
 
 #include "direction.h"
 #include "pilot.h"
@@ -7,37 +8,38 @@
 
 const int VERSION = 42;
 Pilot pilot;
-RobotImpl robotImpl;
+RobotImpl robot;
 
 void setup() {
-    robotImpl.my_setup();
-    robotImpl.my_println("executing version " + String(VERSION));
+    robot.my_setup();
+    Log.notice("executing version %s" CR, VERSION);
 }
 
 void loop() {
 
-    // TODO debug backwards motion
-    // moveBackwards();
-
-    Direction direction = pilot.getDirection(&robotImpl);
+    Direction direction = pilot.getDirection(robot.readLeftTrackSensor(), robot.readRightTrackSensor() );
 
     switch(direction) {
         case Direction::BACKWARDS:
-            robotImpl.moveBackwards(Speed::MIN);
+            robot.moveBackwards(Speed::MIN);
             break;
         case Direction::FORWARDS:
-            robotImpl.moveForwards(Speed::MAX);
+            robot.moveForwards(Speed::MAX);
             break;
         case Direction::LEFT:
-            robotImpl.rotateCounterClockwise(Speed::MAX);
+            robot.rotateCounterClockwise(Speed::MAX);
             break;
         case Direction::RIGHT:
-            robotImpl.rotateClockwise(Speed::MAX);
+            robot.rotateClockwise(Speed::MAX);
             break;
+        case Direction::UNDEFINED:
         default:
-            robotImpl.stop(Speed::ZERO);
+            robot.stop(Speed::ZERO);
     }
+
     // accelerate();
-    // my_delay(2500);
+    // delay(2500);
     // decelerate();
 }
+
+
