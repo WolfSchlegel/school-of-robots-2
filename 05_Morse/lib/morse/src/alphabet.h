@@ -7,6 +7,8 @@ class Alphabet {
   public:
     Alphabet(Morse *morse);
 
+    ~Alphabet();
+
     void o();
 
     void s();
