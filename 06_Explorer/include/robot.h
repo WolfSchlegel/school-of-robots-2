@@ -3,6 +3,8 @@
 
 class Robot {
 public:
+    ~Robot() = default;
+
     virtual void my_setup() = 0;
 
     virtual void accelerate() = 0;
@@ -10,6 +12,9 @@ public:
 
     virtual void moveForwards(int) = 0;
     virtual void moveBackwards(int) = 0;
+
+    virtual int readColourSensor() = 0;
+    virtual int readDistanceSensor() = 0;
 
     virtual int readLeftTrackSensor() = 0;
     virtual int readRightTrackSensor() = 0;

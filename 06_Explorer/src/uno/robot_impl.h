@@ -19,6 +19,8 @@ public:
         rightMotor = AFMS.getMotor(2 );
     }
 
+    ~RobotImpl() = default;
+
     void my_setup() override;
 
     void accelerate() override;
@@ -27,6 +29,8 @@ public:
     void moveForwards(int) override;
     void moveBackwards(int) override;
 
+    int readColourSensor() override;
+    int readDistanceSensor() override;
     int readLeftTrackSensor() override;
     int readRightTrackSensor() override;
 
@@ -41,6 +45,8 @@ private:
     Adafruit_DCMotor *leftMotor;
     Adafruit_DCMotor *rightMotor;
 
+    static const int COLOUR_SENSOR = 2;       // Black cable
+    static const int DISTANCE_SENSOR = 3;     // Black cable
     static const int LEFT_TRACK_SENSOR = 0;   // Yellow cable
     static const int RIGHT_TRACK_SENSOR = 1;  // Blue cable
 };
@@ -103,6 +109,16 @@ void RobotImpl::moveBackwards(int speed) {
     leftMotor->run(BACKWARD);
     rightMotor->setSpeed(speed);
     leftMotor->setSpeed(speed);
+}
+
+int RobotImpl::readColourSensor() {
+    int result = analogRead(COLOUR_SENSOR);
+    Log.notice("colour sensor value is %d" CR, result );
+    return result;
+}
+
+int RobotImpl::readDistanceSensor() {
+    return -1;
 }
 
 int RobotImpl::readLeftTrackSensor() {

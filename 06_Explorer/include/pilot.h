@@ -5,6 +5,7 @@
 
 class Pilot {
 public:
+    ~Pilot() = default;
     Direction getDirection(int rightValue, int leftValue);
 private:
     static const int TRACK_SENSOR_THRESHOLD = 600;

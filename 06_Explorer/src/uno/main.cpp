@@ -17,6 +17,8 @@ void setup() {
 
 void loop() {
 
+    robot.readColourSensor();
+
     Direction direction = pilot.getDirection(robot.readLeftTrackSensor(), robot.readRightTrackSensor() );
 
     switch(direction) {
@@ -24,7 +26,7 @@ void loop() {
             robot.moveBackwards(Speed::MIN);
             break;
         case Direction::FORWARDS:
-            robot.moveForwards(Speed::MAX);
+            robot.moveForwards(Speed::MEDIUM);
             break;
         case Direction::LEFT:
             robot.rotateCounterClockwise(Speed::MAX);
