@@ -9,7 +9,7 @@ class Robot {
 public:
     ~Robot() = default;
 
-    virtual void my_setup() = 0;
+    virtual void setupRobot() = 0;
 
     virtual void accelerate(int) = 0;
     virtual void decelerate(int) = 0;

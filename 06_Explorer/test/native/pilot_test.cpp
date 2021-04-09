@@ -3,24 +3,24 @@
 
 TEST(pilotTests, shouldGetDirectionForwards)
 {
-    Pilot pilot;
+    Pilot pilot(nullptr);
     EXPECT_EQ(pilot.getDirection(10,10), Direction::FORWARDS);
 }
 
 TEST(pilotTests, shouldGetDirectionBackwards)
 {
-    Pilot pilot;
+    Pilot pilot(nullptr);
     EXPECT_EQ(pilot.getDirection(900,900), Direction::BACKWARDS);
 }
 
 TEST(pilotTests, shouldGetDirectionRight)
 {
-    Pilot pilot;
+    Pilot pilot(nullptr);
     EXPECT_EQ(pilot.getDirection(900,10), Direction::RIGHT);
 }
 
 TEST(pilotTests, shouldGetDirectionLeft)
 {
-    Pilot pilot;
+    Pilot pilot(nullptr);
     EXPECT_EQ(pilot.getDirection(10,900), Direction::LEFT);
 }

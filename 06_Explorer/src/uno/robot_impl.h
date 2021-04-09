@@ -21,7 +21,7 @@ public:
 
     ~RobotImpl() = default;
 
-    void my_setup() override;
+    void setupRobot() override;
 
     void accelerate(int) override;
     void decelerate(int) override;
@@ -91,7 +91,7 @@ void RobotImpl::setupMotors() {
     currentDirection = Direction::FORWARDS;
 }
 
-void RobotImpl::my_setup() {
+void RobotImpl::setupRobot() {
     Serial.begin(9600 );
     Log.begin( LOG_LEVEL_NOTICE, &Serial );
     setupLeds();

@@ -2,44 +2,25 @@
 #include <Arduino.h>
 #include <ArduinoLog.h>
 
-#include "colour_matcher.h"
+#include "foo.h"
 #include "pilot.h"
 #include "robot_impl.h"
 
-const int VERSION = 42;
-ColourMatcher colourMatcher;
-Pilot pilot;
+const int VERSION = 43;
+
 RobotImpl robot;
+Foo foo(&robot);
+Pilot pilot(&robot);
 
 void setup() {
-    robot.my_setup();
+    robot.setupRobot();
     Log.notice("executing version %d" CR, VERSION);
 }
 
 void loop() {
-
-    Log.notice("---------------" CR);
-
-    robot.toggleLed(colourMatcher.getColour(robot.readColourSensor()));
-    Direction direction = pilot.getDirection(robot.readLeftTrackSensor(), robot.readRightTrackSensor() );
-
-    switch(direction) {
-        case Direction::BACKWARDS:
-            robot.moveBackwards(Speed::MIN);
-            break;
-        case Direction::FORWARDS:
-            robot.moveForwards(Speed::MEDIUM);
-            break;
-        case Direction::LEFT:
-            robot.rotateCounterClockwise(Speed::MAX);
-            break;
-        case Direction::RIGHT:
-            robot.rotateClockwise(Speed::MAX);
-            break;
-        case Direction::UNDEFINED:
-        default:
-            robot.stop();
-    }
+    Log.notice("-- executing loop() -------------" CR);
+    foo.toggleLed();
+    pilot.move();
 }
 
 
