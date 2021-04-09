@@ -2,23 +2,25 @@
 #include <Arduino.h>
 #include <ArduinoLog.h>
 
-#include "direction.h"
+#include "colour_matcher.h"
 #include "pilot.h"
 #include "robot_impl.h"
 
 const int VERSION = 42;
+ColourMatcher colourMatcher;
 Pilot pilot;
 RobotImpl robot;
 
 void setup() {
     robot.my_setup();
-    Log.notice("executing version %s" CR, VERSION);
+    Log.notice("executing version %d" CR, VERSION);
 }
 
 void loop() {
 
-    robot.readColourSensor();
+    Log.notice("---------------" CR);
 
+    robot.toggleLed(colourMatcher.getColour(robot.readColourSensor()));
     Direction direction = pilot.getDirection(robot.readLeftTrackSensor(), robot.readRightTrackSensor() );
 
     switch(direction) {
@@ -36,12 +38,10 @@ void loop() {
             break;
         case Direction::UNDEFINED:
         default:
-            robot.stop(Speed::ZERO);
+            robot.stop();
     }
-
-    // accelerate();
-    // delay(2500);
-    // decelerate();
 }
+
+
 
 

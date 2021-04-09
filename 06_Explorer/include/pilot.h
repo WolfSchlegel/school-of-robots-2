@@ -1,7 +1,13 @@
 #ifndef INC_06_INCLUDE_PILOT_H
 #define INC_06_INCLUDE_PILOT_H
 
-#include "direction.h"
+enum class Direction {
+    BACKWARDS,
+    FORWARDS,
+    LEFT,
+    RIGHT,
+    UNDEFINED
+};
 
 class Pilot {
 public:

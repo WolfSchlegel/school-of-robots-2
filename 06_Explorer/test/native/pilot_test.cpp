@@ -1,5 +1,4 @@
 #include "gtest/gtest.h"
-#include "direction.h"
 #include "pilot.h"
 
 TEST(pilotTests, shouldGetDirectionForwards)

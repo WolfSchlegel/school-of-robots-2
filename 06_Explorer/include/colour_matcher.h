@@ -12,9 +12,9 @@ public:
     bool isColour( int reading, int colour );
 
     static const int BLACK = 575;
-    static const int BLUE = 500;
-    static const int GREEN = 460;
-    static const int RED = 310;
+    static const int BLUE = 460;
+    static const int GREEN = 420;
+    static const int RED = 300;
 
     static const int MAX_DEVIATION = 10;
 };
