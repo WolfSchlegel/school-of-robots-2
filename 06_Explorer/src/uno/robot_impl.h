@@ -21,32 +21,37 @@ public:
 
     ~RobotImpl() = default;
 
-    void setupRobot() override;
+    void setup() override;
 
     void accelerate(int) override;
+
     void decelerate(int) override;
+    void delayThings(unsigned long) override;
 
     void moveForwards(int) override;
     void moveBackwards(int) override;
 
+    int readButton() override;
     int readColourSensor() override;
     int readDistanceSensor() override;
-
     int readLeftTrackSensor() override;
     int readRightTrackSensor() override;
 
     void rotateClockwise(int) override;
     void rotateCounterClockwise(int) override;
 
-    void toggleLed(Colour) override;
+    void turnAllLedsOff() override;
+    void turnLedOff(Colour) override;
+    void turnLedOn(Colour) override;
 
     void setSpeed(int) override;
     void stop() override;
 
 private:
+    void setupButton();
     void setupLeds();
     void setupMotors();
-    void toggleLedsOff();
+    void toggleLed(Colour, int);
 
     Adafruit_MotorShield AFMS;
     Adafruit_DCMotor *leftMotor;
@@ -57,6 +62,8 @@ private:
     static const int LEFT_TRACK_SENSOR_PIN = 0;   // Yellow cable
     static const int RIGHT_TRACK_SENSOR_PIN = 1;  // Blue cable
 
+    static const int BUTTON_PIN = 11;
+
     static const int BLUE_LED_PIN = 10;
     static const int GREEN_LED_PIN = 9;
     static const int RED_LED_PIN = 8;
@@ -65,18 +72,23 @@ private:
     Direction currentDirection = Direction::UNDEFINED;
 };
 
+void RobotImpl::setupButton() {
+    pinMode(BUTTON_PIN, INPUT);
+    digitalWrite(BUTTON_PIN, HIGH); // activate internal pullup
+}
+
 void RobotImpl::setupLeds() {
     pinMode(BLUE_LED_PIN, OUTPUT);
     pinMode(GREEN_LED_PIN, OUTPUT);
     pinMode(RED_LED_PIN, OUTPUT);
 
-    toggleLed( Colour::RED);
-    delay(1000);
-    toggleLed( Colour::GREEN);
-    delay(1000);
-    toggleLed( Colour::BLUE);
-    delay(1000);
-    toggleLed( Colour::UNDEFINED);
+    turnLedOn( Colour::RED);
+    delayThings(300);
+    turnLedOn( Colour::GREEN);
+    delayThings(300);
+    turnLedOn( Colour::BLUE);
+    delayThings(300);
+    turnAllLedsOff();
 
     digitalWrite(LED_BUILTIN, HIGH);
 }
@@ -91,15 +103,14 @@ void RobotImpl::setupMotors() {
     currentDirection = Direction::FORWARDS;
 }
 
-void RobotImpl::setupRobot() {
-    Serial.begin(9600 );
-    Log.begin( LOG_LEVEL_NOTICE, &Serial );
+void RobotImpl::setup() {
+    setupButton();
     setupLeds();
     setupMotors();
     Log.notice("finished setup" CR);
 }
 
-// experimental and not used yet
+// experimental and not used yet, the goal is to move less jerkily
 //
 void RobotImpl::accelerate(int speed) {
     Log.notice("accelerating from %d to %d" CR, currentSpeed, speed );
@@ -112,7 +123,7 @@ void RobotImpl::accelerate(int speed) {
 
         rightMotor->setSpeed(i);
         leftMotor->setSpeed(i);
-        delay(Speed::DELAY);
+        delayThings(Speed::DELAY);
     }
 
     currentDirection = Direction::FORWARDS;
@@ -132,11 +143,15 @@ void RobotImpl::decelerate(int speed) {
 
         rightMotor->setSpeed(i);
         leftMotor->setSpeed(i);
-        delay(Speed::DELAY);
+        delayThings(Speed::DELAY);
     }
 
     currentDirection = Direction::FORWARDS;
     currentSpeed = speed;
+}
+
+void RobotImpl::delayThings(unsigned long millis) {
+    delay(millis);
 }
 
 void RobotImpl::moveForwards(int speed) {
@@ -163,6 +178,10 @@ void RobotImpl::moveBackwards(int speed) {
 
     currentDirection = Direction::BACKWARDS;
     currentSpeed = speed;
+}
+
+int RobotImpl::readButton() {
+    return digitalRead(BUTTON_PIN);
 }
 
 int RobotImpl::readColourSensor() {
@@ -226,39 +245,36 @@ void RobotImpl::stop() {
     setSpeed(0);
 }
 
-void RobotImpl::toggleLed(Colour colour) {
-    toggleLedsOff();
+void RobotImpl::toggleLed(Colour colour, int value) {
     switch (colour) {
+        case Colour::BLACK:
+            break;
         case Colour::BLUE:
-            Log.notice("turning blue LED on" CR );
-            digitalWrite(BLUE_LED_PIN, HIGH);
-            digitalWrite(GREEN_LED_PIN, LOW);
-            digitalWrite(RED_LED_PIN, LOW);
+            digitalWrite(BLUE_LED_PIN, value);
             break;
         case Colour::GREEN:
-            Log.notice("turning blue LED on" CR );
-            digitalWrite(BLUE_LED_PIN, LOW);
-            digitalWrite(GREEN_LED_PIN, HIGH);
-            digitalWrite(RED_LED_PIN, LOW);
+            digitalWrite(GREEN_LED_PIN, value);
             break;
         case Colour::RED:
-            Log.notice("turning blue LED on" CR );
-            digitalWrite(BLUE_LED_PIN, LOW);
-            digitalWrite(GREEN_LED_PIN, LOW);
-            digitalWrite(RED_LED_PIN, HIGH);
+            digitalWrite(RED_LED_PIN, value);
             break;
-        default:
-            Log.notice("turning all LEDs off" CR );
-            digitalWrite(BLUE_LED_PIN, LOW);
-            digitalWrite(GREEN_LED_PIN, LOW);
-            digitalWrite(RED_LED_PIN, LOW);
+        case Colour::UNDEFINED:
+            break;
     }
 }
 
-void RobotImpl::toggleLedsOff() {
+void RobotImpl::turnAllLedsOff() {
     digitalWrite(BLUE_LED_PIN, LOW);
     digitalWrite(GREEN_LED_PIN, LOW);
     digitalWrite(RED_LED_PIN, LOW);
+}
+
+void RobotImpl::turnLedOff(Colour colour) {
+    toggleLed(colour, LOW);
+}
+
+void RobotImpl::turnLedOn(Colour colour) {
+    toggleLed(colour, HIGH);
 }
 
 #endif //INC_06_EXPLORER_ROBOT_IMPL_H

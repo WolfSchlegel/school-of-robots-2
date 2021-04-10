@@ -15,28 +15,16 @@ TEST(colourMatcherTests, shouldRejectReadingAsColour)
     EXPECT_FALSE( foo.isMatch( 52, 42 ) );
 }
 
-TEST(colourMatcherTests, shouldRecogniseBlack)
-{
-    Foo foo(nullptr);
-    EXPECT_EQ(foo.getColour(Foo::BLACK), Colour::BLACK);
-}
-
 TEST(colourMatcherTests, shouldRecogniseBlue)
 {
     Foo foo(nullptr);
-    EXPECT_EQ(foo.getColour(Foo::BLUE), Colour::BLUE);
-}
-
-TEST(colourMatcherTests, shouldRecogniseGreen)
-{
-    Foo foo(nullptr);
-    EXPECT_EQ(foo.getColour(Foo::GREEN), Colour::GREEN);
+    EXPECT_EQ(foo.getColour(foo.getBlueCalibrationValue()), Colour::BLUE);
 }
 
 TEST(colourMatcherTests, shouldRecogniseRed)
 {
     Foo foo(nullptr);
-    EXPECT_EQ(foo.getColour(Foo::RED), Colour::RED);
+    EXPECT_EQ(foo.getColour(foo.getRedCalibrationValue()), Colour::RED);
 }
 
 TEST(colourMatcherTests, shouldNotRecogniseUnknownColour)

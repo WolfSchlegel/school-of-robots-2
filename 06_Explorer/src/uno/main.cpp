@@ -12,14 +12,29 @@ RobotImpl robot;
 Foo foo(&robot);
 Pilot pilot(&robot);
 
+void calibrateColourSensor() {
+    Log.notice("calibrating colour sensor..." CR);
+    foo.calibrateColourSensor();
+    Log.notice("colour sensor reads %d for red" CR, foo.getRedCalibrationValue());
+    Log.notice("colour sensor reads %d for green" CR, foo.getGreenCalibrationValue());
+    Log.notice("colour sensor reads %d for blue" CR, foo.getBlueCalibrationValue());
+}
+
 void setup() {
-    robot.setupRobot();
+    Serial.begin(9600 );
+    Log.begin( LOG_LEVEL_NOTICE, &Serial );
+
     Log.notice("executing version %d" CR, VERSION);
+
+    Log.notice("initialising robot..." CR);
+    robot.setup();
+
+    calibrateColourSensor();
 }
 
 void loop() {
     Log.notice("-- executing loop() -------------" CR);
-    foo.toggleLed();
+    foo.showGroundColour();
     pilot.move();
 }
 
