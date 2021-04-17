@@ -7,22 +7,36 @@
 
 class Pilot {
 public:
-    Pilot(Robot *robot);
+    explicit Pilot(Robot *robot);
     ~Pilot() = default;
 
-    Direction getDirection(int leftValue, int rightValue);
+    int changeSpeed();
+
+    static Direction getDirection(int leftValue, int rightValue);
+    static int getNextSpeed(int currentSpeed);
+
     Direction move();
 
 private:
-    static const int TRACK_SENSOR_THRESHOLD = 600;
-    Robot *_robot;
+    static const int TRACK_SENSOR_THRESHOLD_ = 600;
+    Robot *robot_;
+    int speed_ = 0;
 };
 
-Pilot::Pilot(Robot *robot) : _robot(robot) {}  
+Pilot::Pilot(Robot *robot) : robot_(robot) {
+    speed_ = Speed::MEDIUM;
+}
+
+int Pilot::changeSpeed() {
+    if(robot_->readButton() == 0) {
+        robot_->blink(100);
+        speed_ = getNextSpeed(speed_);
+    }
+}
 
 Direction Pilot::getDirection(int leftValue, int rightValue){
-    bool leftOnTrack = leftValue < TRACK_SENSOR_THRESHOLD;
-    bool rightOnTrack = rightValue < TRACK_SENSOR_THRESHOLD;
+    bool leftOnTrack = leftValue < TRACK_SENSOR_THRESHOLD_;
+    bool rightOnTrack = rightValue < TRACK_SENSOR_THRESHOLD_;
 
     if (!leftOnTrack && !rightOnTrack) {
         return Direction::BACKWARDS;
@@ -31,33 +45,48 @@ Direction Pilot::getDirection(int leftValue, int rightValue){
         return Direction::FORWARDS;
     }
     if (leftOnTrack) {
-        return Direction::LEFT;
+        return Direction::COUNTER_CLOCK_WISE;
     }
     if (rightOnTrack) {
-        return Direction::RIGHT;
+        return Direction::CLOCK_WISE;
     }
     return Direction::FORWARDS;
 }
 
+int Pilot::getNextSpeed(int currentSpeed) {
+    switch (currentSpeed) {
+        case Speed::ZERO:
+            return Speed::MIN;
+        case Speed::MIN:
+            return Speed::MEDIUM;
+        case Speed::MEDIUM:
+            return Speed::MAX;
+        case Speed::MAX:
+            return Speed::ZERO;
+        default:
+            return Speed::ZERO;
+    }
+}
+
 Direction Pilot::move() {
-    Direction direction = getDirection(_robot->readLeftTrackSensor(), _robot->readRightTrackSensor());
+    Direction direction = getDirection(robot_->readLeftTrackSensor(), robot_->readRightTrackSensor());
 
     switch(direction) {
         case Direction::BACKWARDS:
-            _robot->moveBackwards(Speed::MIN);
+            robot_->moveBackwards(speed_);
             break;
         case Direction::FORWARDS:
-            _robot->moveForwards(Speed::MEDIUM);
+            robot_->moveForwards(speed_);
             break;
-        case Direction::LEFT:
-            _robot->rotateCounterClockwise(Speed::MAX);
+        case Direction::COUNTER_CLOCK_WISE:
+            robot_->rotateCounterClockwise(speed_);
             break;
-        case Direction::RIGHT:
-            _robot->rotateClockwise(Speed::MAX);
+        case Direction::CLOCK_WISE:
+            robot_->rotateClockwise(speed_);
             break;
         case Direction::UNDEFINED:
         default:
-            _robot->stop();
+            robot_->stop();
     }
 
     return direction;

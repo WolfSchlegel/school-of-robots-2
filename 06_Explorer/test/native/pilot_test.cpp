@@ -3,24 +3,35 @@
 
 TEST(pilotTests, shouldGetDirectionForwards)
 {
-    Pilot pilot(nullptr);
-    EXPECT_EQ(pilot.getDirection(10,10), Direction::FORWARDS);
+    EXPECT_EQ(Pilot::getDirection(10,10), Direction::FORWARDS);
 }
 
 TEST(pilotTests, shouldGetDirectionBackwards)
 {
-    Pilot pilot(nullptr);
-    EXPECT_EQ(pilot.getDirection(900,900), Direction::BACKWARDS);
+    EXPECT_EQ(Pilot::getDirection(900,900), Direction::BACKWARDS);
 }
 
 TEST(pilotTests, shouldGetDirectionRight)
 {
-    Pilot pilot(nullptr);
-    EXPECT_EQ(pilot.getDirection(900,10), Direction::RIGHT);
+    EXPECT_EQ(Pilot::getDirection(900,10), Direction::CLOCK_WISE);
 }
 
 TEST(pilotTests, shouldGetDirectionLeft)
 {
-    Pilot pilot(nullptr);
-    EXPECT_EQ(pilot.getDirection(10,900), Direction::LEFT);
+    EXPECT_EQ(Pilot::getDirection(10,900), Direction::COUNTER_CLOCK_WISE);
+}
+
+TEST(pilotTests, shouldGetNextSpeed)
+{
+    int min = Speed::MIN;
+    EXPECT_EQ(Pilot::getNextSpeed(Speed::ZERO), min);
+
+    int medium = Speed::MEDIUM;
+    EXPECT_EQ(Pilot::getNextSpeed(Speed::MIN), medium);
+
+    int max = Speed::MAX;
+    EXPECT_EQ(Pilot::getNextSpeed(Speed::MEDIUM), max);
+
+    int zero = Speed::ZERO;
+    EXPECT_EQ(Pilot::getNextSpeed(Speed::MAX), zero);
 }

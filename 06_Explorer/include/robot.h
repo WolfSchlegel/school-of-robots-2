@@ -2,15 +2,16 @@
 #define INC_06_INCLUDE_ROBOT_H
 
 #include "colour.h"
+#include "direction.h"
 
-// TODO decompose into robots with different responsibilities, such as moving, dealing with colours and distances.
-//
 class Robot {
 public:
     ~Robot() = default;
 
-
     virtual void accelerate(int) = 0;
+
+    virtual void blink(unsigned long) = 0;
+
     virtual void decelerate(int) = 0;
     virtual void delayThings(unsigned long) = 0;
 
@@ -18,6 +19,8 @@ public:
     virtual void moveBackwards(int) = 0;
 
     virtual int readButton() = 0;
+    virtual int readButton(unsigned long) = 0;
+
     virtual int readColourSensor() = 0;
     virtual int readDistanceSensor() = 0;
 
@@ -31,7 +34,9 @@ public:
     virtual void setup() = 0;
     virtual void stop() = 0;
 
-    virtual void turnAllLedsOff() = 0;
+    virtual void turnLedsOff() = 0;
+    virtual void turnLedsOn() = 0;
+
     virtual void turnLedOff(Colour) = 0;
     virtual void turnLedOn(Colour) = 0;
 

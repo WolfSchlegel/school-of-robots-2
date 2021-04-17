@@ -4,8 +4,8 @@
 enum class Direction {
     BACKWARDS,
     FORWARDS,
-    LEFT,
-    RIGHT,
+    COUNTER_CLOCK_WISE,
+    CLOCK_WISE,
     UNDEFINED
 };
 

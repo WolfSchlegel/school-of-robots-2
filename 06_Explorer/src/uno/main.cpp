@@ -2,22 +2,22 @@
 #include <Arduino.h>
 #include <ArduinoLog.h>
 
-#include "foo.h"
+#include "colour_manager.h"
 #include "pilot.h"
 #include "robot_impl.h"
 
 const int VERSION = 43;
 
 RobotImpl robot;
-Foo foo(&robot);
+ColourManager colourManager(&robot);
 Pilot pilot(&robot);
 
 void calibrateColourSensor() {
     Log.notice("calibrating colour sensor..." CR);
-    foo.calibrateColourSensor();
-    Log.notice("colour sensor reads %d for red" CR, foo.getRedCalibrationValue());
-    Log.notice("colour sensor reads %d for green" CR, foo.getGreenCalibrationValue());
-    Log.notice("colour sensor reads %d for blue" CR, foo.getBlueCalibrationValue());
+    colourManager.calibrateColourSensor();
+    Log.notice("colour sensor reads %d for red" CR, colourManager.getRedCalibrationValue());
+    Log.notice("colour sensor reads %d for green" CR, colourManager.getGreenCalibrationValue());
+    Log.notice("colour sensor reads %d for blue" CR, colourManager.getBlueCalibrationValue());
 }
 
 void setup() {
@@ -29,13 +29,15 @@ void setup() {
     Log.notice("initialising robot..." CR);
     robot.setup();
 
+    Log.notice("calibrating colour sensor..." CR);
     calibrateColourSensor();
 }
 
 void loop() {
     Log.notice("-- executing loop() -------------" CR);
-    foo.showGroundColour();
+    colourManager.showGroundColour();
     pilot.move();
+    pilot.changeSpeed();
 }
 
 

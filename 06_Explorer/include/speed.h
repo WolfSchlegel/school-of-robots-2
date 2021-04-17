@@ -7,8 +7,8 @@ public:
     static const int DELAY = 33;
 
     static const int MAX = 120;
-    static const int MIN = 60;
-    static const int MEDIUM = 90;
+    static const int MIN = 80;
+    static const int MEDIUM = 100;
 
     static const int ZERO = 0;
 };

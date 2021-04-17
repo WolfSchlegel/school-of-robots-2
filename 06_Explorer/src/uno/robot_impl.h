@@ -14,16 +14,15 @@
 class RobotImpl : public Robot {
 public:
     RobotImpl() {
-        AFMS = Adafruit_MotorShield();
-        leftMotor = AFMS.getMotor(1 );
-        rightMotor = AFMS.getMotor(2 );
+        AFMS_ = Adafruit_MotorShield();
+        leftMotor_ = AFMS_.getMotor(1 );
+        rightMotor_ = AFMS_.getMotor(2 );
     }
 
     ~RobotImpl() = default;
 
-    void setup() override;
-
     void accelerate(int) override;
+    void blink(unsigned long) override;
 
     void decelerate(int) override;
     void delayThings(unsigned long) override;
@@ -32,15 +31,22 @@ public:
     void moveBackwards(int) override;
 
     int readButton() override;
+    int readButton(unsigned long) override;
+
     int readColourSensor() override;
     int readDistanceSensor() override;
+
     int readLeftTrackSensor() override;
     int readRightTrackSensor() override;
 
     void rotateClockwise(int) override;
     void rotateCounterClockwise(int) override;
 
-    void turnAllLedsOff() override;
+    void setup() override;
+
+    void turnLedsOff() override;
+    void turnLedsOn() override;
+
     void turnLedOff(Colour) override;
     void turnLedOn(Colour) override;
 
@@ -48,59 +54,60 @@ public:
     void stop() override;
 
 private:
-    void setupButton();
+    void rotate(int, int, int);
+    static void setupButton();
     void setupLeds();
     void setupMotors();
-    void toggleLed(Colour, int);
+    static void toggleLed(Colour, int);
 
-    Adafruit_MotorShield AFMS;
-    Adafruit_DCMotor *leftMotor;
-    Adafruit_DCMotor *rightMotor;
+    Adafruit_MotorShield AFMS_;
+    Adafruit_DCMotor *leftMotor_;
+    Adafruit_DCMotor *rightMotor_;
 
-    static const int COLOUR_SENSOR_PIN = 2;       // Black cable
-    static const int DISTANCE_SENSOR_PIN = 3;     // Black cable
-    static const int LEFT_TRACK_SENSOR_PIN = 0;   // Yellow cable
-    static const int RIGHT_TRACK_SENSOR_PIN = 1;  // Blue cable
+    static const int COLOUR_SENSOR_PIN_ = 2;       // Black cable
+    static const int DISTANCE_SENSOR_PIN_ = 3;     // Black cable
+    static const int LEFT_TRACK_SENSOR_PIN_ = 0;   // Yellow cable
+    static const int RIGHT_TRACK_SENSOR_PIN_ = 1;  // Blue cable
 
-    static const int BUTTON_PIN = 11;
+    static const int BUTTON_PIN_ = 11;
 
-    static const int BLUE_LED_PIN = 10;
-    static const int GREEN_LED_PIN = 9;
-    static const int RED_LED_PIN = 8;
+    static const int BLUE_LED_PIN_ = 10;
+    static const int GREEN_LED_PIN_ = 9;
+    static const int RED_LED_PIN_ = 8;
 
-    int currentSpeed;
-    Direction currentDirection = Direction::UNDEFINED;
+    Direction currentDirection_ = Direction::UNDEFINED;
+    int currentSpeed_ = 0;
 };
 
 void RobotImpl::setupButton() {
-    pinMode(BUTTON_PIN, INPUT);
-    digitalWrite(BUTTON_PIN, HIGH); // activate internal pullup
+    pinMode(BUTTON_PIN_, INPUT);
+    digitalWrite(BUTTON_PIN_, HIGH); // activate internal pullup
 }
 
 void RobotImpl::setupLeds() {
-    pinMode(BLUE_LED_PIN, OUTPUT);
-    pinMode(GREEN_LED_PIN, OUTPUT);
-    pinMode(RED_LED_PIN, OUTPUT);
+    pinMode(BLUE_LED_PIN_, OUTPUT);
+    pinMode(GREEN_LED_PIN_, OUTPUT);
+    pinMode(RED_LED_PIN_, OUTPUT);
 
     turnLedOn( Colour::RED);
-    delayThings(300);
+    delay(300);
     turnLedOn( Colour::GREEN);
-    delayThings(300);
+    delay(300);
     turnLedOn( Colour::BLUE);
-    delayThings(300);
-    turnAllLedsOff();
+    delay(300);
+    turnLedsOff();
 
     digitalWrite(LED_BUILTIN, HIGH);
 }
 
 void RobotImpl::setupMotors() {
     Log.notice("initialising Adafruit Motorshield v2" CR );
-    AFMS.begin();  // create with the default frequency 1.6KHz
+    AFMS_.begin();  // create with the default frequency 1.6KHz
 
-    rightMotor->run(FORWARD);
-    leftMotor->run(FORWARD);
+    rightMotor_->run(FORWARD);
+    leftMotor_->run(FORWARD);
 
-    currentDirection = Direction::FORWARDS;
+    currentDirection_ = Direction::FORWARDS;
 }
 
 void RobotImpl::setup() {
@@ -113,41 +120,47 @@ void RobotImpl::setup() {
 // experimental and not used yet, the goal is to move less jerkily
 //
 void RobotImpl::accelerate(int speed) {
-    Log.notice("accelerating from %d to %d" CR, currentSpeed, speed );
+    Log.notice("accelerating from %d to %d" CR, currentSpeed_, speed);
 
-    rightMotor->run(FORWARD);
-    leftMotor->run(FORWARD);
+    rightMotor_->run(FORWARD);
+    leftMotor_->run(FORWARD);
 
-    for ( int i = Speed::MIN; i <= speed; i += Speed::DELTA ){
+    for (int i = currentSpeed_; i <= speed; i += Speed::DELTA ){
         Log.notice("setting speed to %d" CR, i );
 
-        rightMotor->setSpeed(i);
-        leftMotor->setSpeed(i);
-        delayThings(Speed::DELAY);
+        rightMotor_->setSpeed(i);
+        leftMotor_->setSpeed(i);
+        delay(Speed::DELAY);
     }
 
-    currentDirection = Direction::FORWARDS;
-    currentSpeed = speed;
+    currentDirection_ = Direction::FORWARDS;
+    currentSpeed_ = speed;
+}
+
+void RobotImpl::blink(unsigned long millis) {
+    turnLedsOn();
+    delay(millis);
+    turnLedsOff();
 }
 
 // still experimental and not used yet
 //
 void RobotImpl::decelerate(int speed) {
-    Log.notice("decelerating from %d to %d" CR, currentSpeed, speed );
+    Log.notice("decelerating from %d to %d" CR, currentSpeed_, speed );
 
-    rightMotor->run(FORWARD);
-    leftMotor->run(FORWARD);
+    rightMotor_->run(FORWARD);
+    leftMotor_->run(FORWARD);
 
-    for ( int i = Speed::MAX; i >= speed; i -= Speed::DELTA ){
+    for (int i = currentSpeed_; i >= speed; i -= Speed::DELTA ){
         Log.notice("setting speed to %d" CR, i );
 
-        rightMotor->setSpeed(i);
-        leftMotor->setSpeed(i);
-        delayThings(Speed::DELAY);
+        rightMotor_->setSpeed(i);
+        leftMotor_->setSpeed(i);
+        delay(Speed::DELAY);
     }
 
-    currentDirection = Direction::FORWARDS;
-    currentSpeed = speed;
+    currentDirection_ = Direction::FORWARDS;
+    currentSpeed_ = speed;
 }
 
 void RobotImpl::delayThings(unsigned long millis) {
@@ -157,35 +170,47 @@ void RobotImpl::delayThings(unsigned long millis) {
 void RobotImpl::moveForwards(int speed) {
     Log.notice("moving forwards at speed %d" CR, speed );
 
-    rightMotor->run(FORWARD);
-    leftMotor->run(FORWARD);
+    rightMotor_->run(FORWARD);
+    leftMotor_->run(FORWARD);
 
-    rightMotor->setSpeed(speed);
-    leftMotor->setSpeed(speed);
+    rightMotor_->setSpeed(speed);
+    leftMotor_->setSpeed(speed);
 
-    currentDirection = Direction::FORWARDS;
-    currentSpeed = speed;
+    currentDirection_ = Direction::FORWARDS;
+    currentSpeed_ = speed;
 }
 
 void RobotImpl::moveBackwards(int speed) {
     Log.notice("moving backwards at speed %d" CR, speed );
 
-    rightMotor->run(BACKWARD);
-    leftMotor->run(BACKWARD);
+    rightMotor_->run(BACKWARD);
+    leftMotor_->run(BACKWARD);
 
-    rightMotor->setSpeed(speed);
-    leftMotor->setSpeed(speed);
+    rightMotor_->setSpeed(speed);
+    leftMotor_->setSpeed(speed);
 
-    currentDirection = Direction::BACKWARDS;
-    currentSpeed = speed;
+    currentDirection_ = Direction::BACKWARDS;
+    currentSpeed_ = speed;
 }
 
 int RobotImpl::readButton() {
-    return digitalRead(BUTTON_PIN);
+    return digitalRead(BUTTON_PIN_);
+}
+
+int RobotImpl::readButton(unsigned long timeout) {
+    unsigned long start = millis();
+    int result = 1;
+
+    while (readButton() == 1 && millis() - start < timeout) {
+        delay(100);
+        result = digitalRead(BUTTON_PIN_);
+    }
+
+    return result;
 }
 
 int RobotImpl::readColourSensor() {
-    int result = analogRead(COLOUR_SENSOR_PIN);
+    int result = analogRead(COLOUR_SENSOR_PIN_);
     Log.notice("colour sensor value is %d" CR, result );
     return result;
 }
@@ -195,50 +220,46 @@ int RobotImpl::readDistanceSensor() {
 }
 
 int RobotImpl::readLeftTrackSensor() {
-    int result = analogRead(LEFT_TRACK_SENSOR_PIN);
+    int result = analogRead(LEFT_TRACK_SENSOR_PIN_);
     Log.notice("left track sensor value is %d" CR, result );
     return result;
 }
 
 int RobotImpl::readRightTrackSensor() {
-    int result = analogRead(RIGHT_TRACK_SENSOR_PIN);
+    int result = analogRead(RIGHT_TRACK_SENSOR_PIN_);
     Log.notice("right track sensor value is %d" CR, result );
     return result;
 }
 
+void RobotImpl::rotate(int speed, int leftDirection, int rightDirection) {
+    leftMotor_->run(leftDirection);
+    rightMotor_->run(rightDirection);
+
+    leftMotor_->setSpeed(speed);
+    rightMotor_->setSpeed(speed);
+}
+
 void RobotImpl::rotateClockwise(int speed) {
-    Log.notice("moving counterclockwise at speed %d" CR, speed );
-
-    rightMotor->run(BACKWARD);
-    leftMotor->run(FORWARD);
-
-    rightMotor->setSpeed(speed);
-    leftMotor->setSpeed(speed);
-
-    currentDirection = Direction::RIGHT;
-    currentSpeed = speed;
+    Log.notice("rotating clockwise at speed %d" CR, speed );
+    rotate(speed, FORWARD, BACKWARD);
+    currentDirection_ = Direction::CLOCK_WISE;
+    currentSpeed_ = speed;
 }
 
 void RobotImpl::rotateCounterClockwise(int speed) {
-    Log.notice("moving counterclockwise at speed %d" CR, speed );
-
-    rightMotor->run(FORWARD);
-    leftMotor->run(BACKWARD);
-
-    rightMotor->setSpeed(speed);
-    leftMotor->setSpeed(speed);
-
-    currentDirection = Direction::LEFT;
-    currentSpeed = speed;
+    Log.notice("rotating counterclockwise at speed %d" CR, speed );
+    rotate(speed, BACKWARD, FORWARD);
+    currentDirection_ = Direction::COUNTER_CLOCK_WISE;
+    currentSpeed_ = speed;
 }
 
 void RobotImpl::setSpeed(int speed) {
     Log.notice("setting speed to %d" CR, speed );
 
-    rightMotor->setSpeed(speed);
-    leftMotor->setSpeed(speed);
+    rightMotor_->setSpeed(speed);
+    leftMotor_->setSpeed(speed);
 
-    currentSpeed = speed;
+    currentSpeed_ = speed;
 }
 
 void RobotImpl::stop() {
@@ -250,23 +271,29 @@ void RobotImpl::toggleLed(Colour colour, int value) {
         case Colour::BLACK:
             break;
         case Colour::BLUE:
-            digitalWrite(BLUE_LED_PIN, value);
+            digitalWrite(BLUE_LED_PIN_, value);
             break;
         case Colour::GREEN:
-            digitalWrite(GREEN_LED_PIN, value);
+            digitalWrite(GREEN_LED_PIN_, value);
             break;
         case Colour::RED:
-            digitalWrite(RED_LED_PIN, value);
+            digitalWrite(RED_LED_PIN_, value);
             break;
         case Colour::UNDEFINED:
             break;
     }
 }
 
-void RobotImpl::turnAllLedsOff() {
-    digitalWrite(BLUE_LED_PIN, LOW);
-    digitalWrite(GREEN_LED_PIN, LOW);
-    digitalWrite(RED_LED_PIN, LOW);
+void RobotImpl::turnLedsOff() {
+    digitalWrite(BLUE_LED_PIN_, LOW);
+    digitalWrite(GREEN_LED_PIN_, LOW);
+    digitalWrite(RED_LED_PIN_, LOW);
+}
+
+void RobotImpl::turnLedsOn() {
+    digitalWrite(BLUE_LED_PIN_, HIGH);
+    digitalWrite(GREEN_LED_PIN_, HIGH);
+    digitalWrite(RED_LED_PIN_, HIGH);
 }
 
 void RobotImpl::turnLedOff(Colour colour) {
